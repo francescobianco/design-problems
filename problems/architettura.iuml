@@ -1,0 +1,37 @@
+@startuml
+skinparam linetype polyline
+
+node "Internet" as internet #cloud {
+  cloud "User" as user
+}
+
+node "AWS" as aws {
+  node "ELB - Load Balancer" as elb
+  elb -[hidden]--> "Autoscaling"
+
+  node "Auto Scaling Group" as asg {
+    node "EC2 Instances\n (Backend - Django)" as ec2 {
+      [Docker] 
+    }
+  }
+
+  node "CloudFront\n (CDN for static assets)" as cloudfront
+  node "Route 53\n (DNS)" as route53
+
+  cloudfront --> elb
+  route53 --> elb
+
+  node "RDS - PostgreSQL\n with Replication" as rds
+
+  node "Lambda\n (FaaS)" as lambda
+  node "S3 Bucket\n (Storage for assets)" as s3
+
+  ec2 --> rds : "Database"
+  ec2 --> lambda : "Async Tasks"
+  elb --> ec2
+}
+
+internet -down-> route53
+cloudfront --> s3
+
+user -left-> internet : "HTTPS Requests"
