@@ -1,3 +1,4 @@
+@startuml
 
 node "Internet" as internet #cloud {
   cloud "User" as user
@@ -33,3 +34,5 @@ internet -down-> route53
 cloudfront --> s3
 
 user -left-> internet : "HTTPS Requests"
+
+@enduml
