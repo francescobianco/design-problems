@@ -1,5 +1,3 @@
-@startuml
-skinparam linetype polyline
 
 node "Internet" as internet #cloud {
   cloud "User" as user
